@@ -84,12 +84,19 @@ class _StreakScreenState extends State<StreakScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black
+,
         title: const Text(
-          'Streaks',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+
+          'Khushal Streaks',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: 
+          Colors.white,
+          ),
         ),
         centerTitle: true,
       ),
+      backgroundColor: Colors.black
+      ,
       body: ListView.builder(
         itemCount: streaks.length,
         itemBuilder: (context, index) {
@@ -98,7 +105,7 @@ class _StreakScreenState extends State<StreakScreen> {
               : streak.currentCount / streak.totalDays;
           return Card(
             margin: const EdgeInsets.all(8.0),
-            color: Colors.grey[900],
+            color: const Color.fromARGB(255, 0, 251, 238),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
