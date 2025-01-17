@@ -2,8 +2,37 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../modals/streak_model.dart';
+class Streak {
+  String name;
+  int currentCount;
+  int totalDays;
+  DateTime lastUpdated;
 
+  Streak({
+    required this.name,
+    required this.currentCount,
+    required this.totalDays,
+    required this.lastUpdated,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'currentCount': currentCount,
+      'totalDays': totalDays,
+      'lastUpdated': lastUpdated.toIso8601String(),
+    };
+  }
+
+  factory Streak.fromMap(Map<String, dynamic> map) {
+    return Streak(
+      name: map['name'],
+      currentCount: map['currentCount'],
+      totalDays: map['totalDays'],
+      lastUpdated: DateTime.parse(map['lastUpdated']),
+    );
+  }
+}
 
 class StreakScreen extends StatefulWidget {
   const StreakScreen({super.key});
@@ -29,6 +58,7 @@ class _StreakScreenState extends State<StreakScreen> {
           .map((streakJson) => Streak.fromMap(json.decode(streakJson)))
           .toList();
     });
+    _resetMissedStreaks();
   }
 
   Future<void> _saveStreaks() async {
@@ -59,6 +89,9 @@ class _StreakScreenState extends State<StreakScreen> {
       setState(() {
         streak.currentCount++;
         streak.lastUpdated = now;
+        if (streak.currentCount >= streak.totalDays) {
+          streaks.remove(streak);
+        }
       });
       _saveStreaks();
     }
@@ -66,95 +99,16 @@ class _StreakScreenState extends State<StreakScreen> {
 
   void _resetMissedStreaks() {
     final now = DateTime.now();
-    for (var streak in streaks) {
-      if (streak.lastUpdated.day != now.day ||
-          streak.lastUpdated.month != now.month ||
-          streak.lastUpdated.year != now.year) {
-        setState(() {
+    setState(() {
+      for (var streak in streaks) {
+        if (streak.lastUpdated.day != now.day ||
+            streak.lastUpdated.month != now.month ||
+            streak.lastUpdated.year != now.year) {
           streak.currentCount = 0;
-        });
+        }
       }
-    }
+    });
     _saveStreaks();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _resetMissedStreaks();
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black
-,
-        title: const Text(
-
-          'Khushal Streaks',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: 
-          Colors.white,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      backgroundColor: Colors.black
-      ,
-      body: ListView.builder(
-        itemCount: streaks.length,
-        itemBuilder: (context, index) {
-          final streak = streaks[index];
-          double progress = streak.totalDays == 0 ? 0
-              : streak.currentCount / streak.totalDays;
-          return Card(
-            margin: const EdgeInsets.all(8.0),
-            color: const Color.fromARGB(255, 0, 251, 238),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    streak.name,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Progress: ${streak.currentCount}/${streak.totalDays}',
-                    style: const TextStyle(fontSize: 18, color: Colors.white70),
-                  ),
-                  const SizedBox(height: 8),
-                  LinearProgressIndicator(
-                    value: progress,
-                    minHeight: 7,
-                    backgroundColor: Colors.grey[800],
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  const SizedBox(height: 12),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: (streak.lastUpdated.day == DateTime.now().day)
-                          ? null
-                          : () => _incrementStreak(streak),
-                      child: const Text(
-                        '+',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddStreakDialog(),
-        child: const Icon(Icons.add),
-      ),
-    );
   }
 
   void _showAddStreakDialog() {
@@ -214,6 +168,77 @@ class _StreakScreenState extends State<StreakScreen> {
           ],
         );
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Streaks',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
+      body: ListView.builder(
+        itemCount: streaks.length,
+        itemBuilder: (context, index) {
+          final streak = streaks[index];
+          double progress = streak.totalDays == 0
+              ? 0
+              : streak.currentCount / streak.totalDays;
+
+          Color backgroundColor = Color.lerp(
+            Colors.red,
+            Colors.green,
+            progress,
+          )!;
+
+          return Card(
+            margin: const EdgeInsets.all(8.0),
+            color: backgroundColor,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    streak.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Progress: ${streak.currentCount}/${streak.totalDays}',
+                    style: const TextStyle(fontSize: 18, color: Colors.white70),
+                  ),
+                  const SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      onPressed: (streak.lastUpdated.day == DateTime.now().day)
+                          ? null
+                          : () => _incrementStreak(streak),
+                      child: const Text(
+                        '+',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddStreakDialog(),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
