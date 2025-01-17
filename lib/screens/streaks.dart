@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../modals/streak_model.dart';
 
 
@@ -82,21 +83,61 @@ class _StreakScreenState extends State<StreakScreen> {
     _resetMissedStreaks();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Streaks')),
+      appBar: AppBar(
+        title: const Text(
+          'Streaks',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
       body: ListView.builder(
         itemCount: streaks.length,
         itemBuilder: (context, index) {
           final streak = streaks[index];
+          double progress = streak.totalDays == 0 ? 0
+              : streak.currentCount / streak.totalDays;
           return Card(
-            child: ListTile(
-              title: Text(streak.name),
-              subtitle:
-                  Text('Progress: ${streak.currentCount}/${streak.totalDays}'),
-              trailing: ElevatedButton(
-                onPressed: (streak.lastUpdated.day == DateTime.now().day)
-                    ? null
-                    : () => _incrementStreak(streak),
-                child: const Text('+'),
+            margin: const EdgeInsets.all(8.0),
+            color: Colors.grey[900],
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    streak.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Progress: ${streak.currentCount}/${streak.totalDays}',
+                    style: const TextStyle(fontSize: 18, color: Colors.white70),
+                  ),
+                  const SizedBox(height: 8),
+                  LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 7,
+                    backgroundColor: Colors.grey[800],
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  const SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      onPressed: (streak.lastUpdated.day == DateTime.now().day)
+                          ? null
+                          : () => _incrementStreak(streak),
+                      child: const Text(
+                        '+',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           );
@@ -117,25 +158,40 @@ class _StreakScreenState extends State<StreakScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Add Streak'),
+          backgroundColor: Colors.grey[900],
+          title: const Text(
+            'Add Streak',
+            style: TextStyle(fontSize: 22, color: Colors.white),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: 'Streak Name'),
+                decoration: const InputDecoration(
+                  labelText: 'Streak Name',
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                style: const TextStyle(color: Colors.white),
               ),
               TextField(
                 controller: daysController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Total Days'),
+                decoration: const InputDecoration(
+                  labelText: 'Total Days',
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                style: const TextStyle(color: Colors.white),
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
