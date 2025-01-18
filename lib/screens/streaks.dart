@@ -192,22 +192,23 @@ class _StreakScreenState extends State<StreakScreen> {
         : streak.currentCount / streak.totalDays;
 
     return Card(
+      color: const Color.fromARGB(131, 135, 134, 134),
       margin: const EdgeInsets.all(8.0),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
-            // Circular Progress Bar
+            
             Stack(
               alignment: Alignment.center,
               children: [
                 SizedBox(
-                  width: 60,
-                  height: 60,
+                  width: 90,
+                  height: 90,
                   child: CircularProgressIndicator(
                     value: progress,
-                    backgroundColor: Colors.grey.shade300,
-                    color: Colors.blue,
+                    backgroundColor: Colors.black,
+                    color: const Color.fromARGB(255, 27, 247, 203),
                     strokeWidth: 6.0,
                   ),
                 ),
@@ -216,13 +217,12 @@ class _StreakScreenState extends State<StreakScreen> {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
               ],
             ),
             const SizedBox(width: 16),
-            // Streak Details
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,26 +232,28 @@ class _StreakScreenState extends State<StreakScreen> {
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Progress: ${streak.currentCount}/${streak.totalDays}',
-                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 16),
-            // Increment Button
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 27, 247, 203)),
+              ),
               onPressed: (streak.lastUpdated.day == DateTime.now().day)
                   ? null
                   : () => _incrementStreak(streak),
               child: const Text(
                 '+',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18,color: Colors.black),
               ),
             ),
           ],
@@ -264,7 +266,7 @@ class _StreakScreenState extends State<StreakScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromARGB(255, 27, 247, 203),
         onPressed: () => _showAddStreakDialog(),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add,size: 29,),
       ),
     );
   }
