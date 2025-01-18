@@ -222,7 +222,7 @@ class _StreakScreenState extends State<StreakScreen> {
               ],
             ),
             const SizedBox(width: 16),
-          
+            // Streak Details
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,6 +244,7 @@ class _StreakScreenState extends State<StreakScreen> {
               ),
             ),
             const SizedBox(width: 16),
+            // Increment Button
             ElevatedButton(
               onPressed: (streak.lastUpdated.day == DateTime.now().day)
                   ? null
@@ -259,6 +260,12 @@ class _StreakScreenState extends State<StreakScreen> {
     );
   },
 ),
+
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromARGB(255, 27, 247, 203),
+        onPressed: () => _showAddStreakDialog(),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
