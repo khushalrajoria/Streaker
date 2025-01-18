@@ -174,32 +174,56 @@ class _StreakScreenState extends State<StreakScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text(
-          'Streaks',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          'Khushal`s Streaks',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Colors.white),
         ),
         centerTitle: true,
+        backgroundColor: Colors.black,
       ),
       body: ListView.builder(
-        itemCount: streaks.length,
-        itemBuilder: (context, index) {
-          final streak = streaks[index];
-          double progress = streak.totalDays == 0
-              ? 0
-              : streak.currentCount / streak.totalDays;
+  itemCount: streaks.length,
+  itemBuilder: (context, index) {
+    final streak = streaks[index];
+    double progress = streak.totalDays == 0
+        ? 0
+        : streak.currentCount / streak.totalDays;
 
-          Color backgroundColor = Color.lerp(
-            Colors.red,
-            Colors.green,
-            progress,
-          )!;
-
-          return Card(
-            margin: const EdgeInsets.all(8.0),
-            color: backgroundColor,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
+    return Card(
+      margin: const EdgeInsets.all(8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            // Circular Progress Bar
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(
+                    value: progress,
+                    backgroundColor: Colors.grey.shade300,
+                    color: Colors.blue,
+                    strokeWidth: 6.0,
+                  ),
+                ),
+                Text(
+                  '${(progress * 100).toInt()}%',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 16),
+          
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -208,37 +232,33 @@ class _StreakScreenState extends State<StreakScreen> {
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   Text(
                     'Progress: ${streak.currentCount}/${streak.totalDays}',
-                    style: const TextStyle(fontSize: 18, color: Colors.white70),
-                  ),
-                  const SizedBox(height: 12),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: (streak.lastUpdated.day == DateTime.now().day)
-                          ? null
-                          : () => _incrementStreak(streak),
-                      child: const Text(
-                        '+',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 ],
               ),
             ),
-          );
-        },
+            const SizedBox(width: 16),
+            ElevatedButton(
+              onPressed: (streak.lastUpdated.day == DateTime.now().day)
+                  ? null
+                  : () => _incrementStreak(streak),
+              child: const Text(
+                '+',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddStreakDialog(),
-        child: const Icon(Icons.add),
-      ),
+    );
+  },
+),
     );
   }
 }
