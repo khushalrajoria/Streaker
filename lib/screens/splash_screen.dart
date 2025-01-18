@@ -8,10 +8,10 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
-      backgroundColor: const Color.fromARGB(255, 28, 28, 28),
-      splash: 'assets/images/logo.png',
+      backgroundColor:  Colors.black,
+      splash: 'assets/images/conquer.jpg',
       nextScreen: const StreakScreen(),
-      splashTransition: SplashTransition.scaleTransition,
+      splashTransition: SplashTransition.fadeTransition,
       splashIconSize: 274,
     );
   }

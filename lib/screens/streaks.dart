@@ -183,85 +183,91 @@ class _StreakScreenState extends State<StreakScreen> {
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
-      body: ListView.builder(
-  itemCount: streaks.length,
-  itemBuilder: (context, index) {
-    final streak = streaks[index];
-    double progress = streak.totalDays == 0
-        ? 0
-        : streak.currentCount / streak.totalDays;
-
-    return Card(
-      color: const Color.fromARGB(131, 135, 134, 134),
-      margin: const EdgeInsets.all(8.0),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  width: 90,
-                  height: 90,
-                  child: CircularProgressIndicator(
-                    value: progress,
-                    backgroundColor: Colors.black,
-                    color: const Color.fromARGB(255, 27, 247, 203),
-                    strokeWidth: 6.0,
-                  ),
-                ),
-                Text(
-                  '${(progress * 100).toInt()}%',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/dedicate.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: ListView.builder(
+          itemCount: streaks.length,
+          itemBuilder: (context, index) {
+            final streak = streaks[index];
+            double progress = streak.totalDays == 0 ? 0: streak.currentCount / streak.totalDays;
+        
+            return Card(
+        color: const Color.fromARGB(131, 135, 134, 134),
+        margin: const EdgeInsets.all(8.0),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              
+              Stack(
+                alignment: Alignment.center,
                 children: [
+                  SizedBox(
+                    width: 90,
+                    height: 90,
+                    child: CircularProgressIndicator(
+                      value: progress,
+                      backgroundColor: Colors.black,
+                      color: const Color.fromARGB(255, 27, 247, 203),
+                      strokeWidth: 6.0,
+                    ),
+                  ),
                   Text(
-                    streak.name,
+                    '${(progress * 100).toInt()}%',
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Progress: ${streak.currentCount}/${streak.totalDays}',
-                    style: const TextStyle(fontSize: 16, color: Colors.white),
-                  ),
                 ],
               ),
-            ),
-            const SizedBox(width: 16),
-            ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 27, 247, 203)),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      streak.name,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Progress: ${streak.currentCount}/${streak.totalDays}',
+                      style: const TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
-              onPressed: (streak.lastUpdated.day == DateTime.now().day)
-                  ? null
-                  : () => _incrementStreak(streak),
-              child: const Text(
-                '+',
-                style: TextStyle(fontSize: 18,color: Colors.black),
+              const SizedBox(width: 16),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 27, 247, 203)),
+                ),
+                onPressed: (streak.lastUpdated.day == DateTime.now().day)
+                    ? null
+                    : () => _incrementStreak(streak),
+                child: const Text(
+                  '+',
+                  style: TextStyle(fontSize: 18,color: Colors.black),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
+        ),
+            );
+          },
         ),
       ),
-    );
-  },
-),
 
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromARGB(255, 27, 247, 203),

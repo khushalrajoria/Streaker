@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'screens/splash_screen.dart';
 
-import 'screens/streaks.dart';
 
 
 void main() {
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const StreakScreen(),
+      home: const SplashScreen(),
     );
   }
 }
